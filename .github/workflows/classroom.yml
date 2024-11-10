@@ -1,0 +1,53 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: testProductoElectronico
+      id: testproductoelectronico
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testProductoElectronico
+        setup-command: make compile
+        command: java -jar lib/junit-platform-console-standalone-1.5.2.jar -class-path
+          build --select-method miTest.AppTest#testProductoElectronico
+        timeout: 10
+        max-score: 33
+    - name: testProductoAlimenticio
+      id: testproductoalimenticio
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testProductoAlimenticio
+        setup-command: ''
+        command: java -jar lib/junit-platform-console-standalone-1.5.2.jar -class-path
+          build --select-method miTest.AppTest#testProductoAlimenticio
+        timeout: 10
+        max-score: 33
+    - name: testCarrito
+      id: testcarrito
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testCarrito
+        setup-command: ''
+        command: java -jar lib/junit-platform-console-standalone-1.5.2.jar -class-path
+          build --select-method miTest.AppTest#testCarrito
+        timeout: 10
+        max-score: 33
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTPRODUCTOELECTRONICO_RESULTS: "${{steps.testproductoelectronico.outputs.result}}"
+        TESTPRODUCTOALIMENTICIO_RESULTS: "${{steps.testproductoalimenticio.outputs.result}}"
+        TESTCARRITO_RESULTS: "${{steps.testcarrito.outputs.result}}"
+      with:
+        runners: testproductoelectronico,testproductoalimenticio,testcarrito
