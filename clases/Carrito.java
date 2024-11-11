@@ -1,6 +1,7 @@
 package clases;
 
 // Clase Carrito
+//
 public class Carrito<T extends Producto> {
     private T[] productos;
     private int indice;
