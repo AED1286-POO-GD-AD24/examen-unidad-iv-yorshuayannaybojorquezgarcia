@@ -1,6 +1,7 @@
 package clases;
 
 // Clase Carrito
+//
 public class Carrito<T extends Producto> {
     private T[] productos;
     private int indice;
@@ -20,10 +21,21 @@ public class Carrito<T extends Producto> {
     }
 
     public double calcularTotal() {
-        
+        double total = 0;
+        for (Producto producto : productos) {
+            if (producto != null) {
+                total += producto.getPrecio();
+            }
+        }
+        return total;
     }
-
+    
     public void mostrarProductos() {
-        
-    }
+        System.out.println("Lista de Productos:");
+        for (Producto producto : productos) {
+            if (producto != null) { 
+                System.out.println(producto);
+            }
+        }
+    }    
 }
